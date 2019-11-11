@@ -37,8 +37,8 @@ configure do
 	(
 		id INTEGER PRIMARY KEY AUTOINCREMENT, 
 		created_date DATE, 
-		content TEXT
-		post_id INTEGER
+		content TEXT,
+		post_id integer
 	)'
 end	
 
@@ -105,6 +105,10 @@ post '/details/:post_id' do
 	# получаем переменную из post-запроса
 	content = params[:content]
 
-	erb "You typed comment #{content} for post #{post_id}"	
+	# Сохранение данных в БД
+	@db.execute 'insert into Comments (content, created_date, post_id) values (?, datetime(), ?)', [content, post_id]	
 
+	# перенаправление на страницу поста
+	
+	redirect to('/details/' + post_id) 
 end	
